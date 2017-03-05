@@ -1,40 +1,46 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
-	<title></title>
-	<style>
-	*{
-		margin: 0;
-		padding: 0;
-	}
-
-	#map {
-		height:500px;
-		width: 500px;
-	}
-	</style>
+  
+  <title>Google Maps Multiple Markers</title>
+  <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
 </head>
 <body>
+  <div id="map" style="height: 400px; width: 500px;">
+</div>
+<script type="text/javascript">
+    var locations = [
+      ['SM Baguio', 16.408819, 120.599352],
+      ['Center Mall', 16.416305, 120.596269 ],
+      ['Burnham Park', 16.409540, 120.594808],
+      ['Session Road', 16.411208, 120.599009],
+      ['Hilltop Baguio', 16.415676, 120.594634],
+      ['Bonifacio Street ', 16.418452, 120.596597]
+    ];
 
-<div id="map"></div>
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15,
+      center: new google.maps.LatLng(16.408798, 120.597852),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
 
-<script>
-function initMap() {
-	var location = {lat: 16.402333, lng: 120.596007};
-	var map = new google.maps.Map(document.getElementById("map"),{
-		zoom: 25,
- 		center: location
-	});
-	var marker = new google.maps.Marker({
-		position: location,
-		map: map
-	});
-}
+    var infowindow = new google.maps.InfoWindow();
 
-</script>
+    var marker, i;
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmTOe3COPXDpaDoo1EwRlSn2Br_o5-QpI&callback=initMap"></script>
+    for (i = 0; i < locations.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
 
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
 </body>
 </html>
